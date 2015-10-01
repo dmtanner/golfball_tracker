@@ -21,7 +21,14 @@ int main(int argc, char** argv)
 
 	cout << "Speed: " << processor.getSpeed() << " mph" << endl;	
 	cout << "Direction: " << processor.getDirection() << " degrees" << endl;	
-	cout << "Launch Angle: " << processor.getLaunchAngle() << " degrees" << endl;	
+	cout << "Launch Angle: " << processor.getLaunchAngle() << " degrees" << endl;
+
+	Mat final;
+	float alpha = 0.5;
+	addWeighted(pics[0], alpha, pics[1], 1.0-alpha, 0.0, final);
+	imshow("source", final);
+	waitKey(0);
+
 	return 0;
 }
 

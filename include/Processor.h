@@ -8,7 +8,7 @@ using namespace std;
 class Processor
 {
 	public:
-		Processor(vector<Mat> pics);
+		Processor(vector<Mat>& pics);
 		float getSpeed();
 		float getDirection();
 		float getLaunchAngle();
@@ -16,6 +16,7 @@ class Processor
 	private:
 		vector<Mat> images;
 		vector<Golfball> golfballs;
+		float pixels_per_inch;
 		int threshold;
 		void extractGolfballs();
 		void undistort();

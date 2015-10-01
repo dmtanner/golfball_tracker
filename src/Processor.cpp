@@ -1,8 +1,9 @@
 #include "Processor.h"
 
-Processor::Processor(vector<Mat> pics)
+Processor::Processor(vector<Mat>& pics)
 {
 	threshold = 18;
+	pixels_per_inch = 34;
 	images = pics;
 
 	undistort();
@@ -12,10 +13,10 @@ Processor::Processor(vector<Mat> pics)
 
 float Processor::getSpeed()
 {
-	float pixels_per_inch = 34;
 	float ips_to_mph = 1.0/17.6;
 	float seconds = 1.0/750.0;
-	return ((golfballs[1].distance - golfballs[0].distance)/pixels_per_inch/seconds)*ips_to_mph;
+	float distance = sqrt(pow((golfballs[1].distance - golfballs[0].distance), 2) + pow((golfballs[1].horizontal_position - golfballs[0].horizontal_position), 2) + pow((golfballs[1].height - golfballs[0].height), 2));
+	return (distance/pixels_per_inch/seconds)*ips_to_mph;
 }
 
 float Processor::getDirection()
@@ -94,21 +95,21 @@ void Processor::extractGolfballs()
 		if(contours.size() > 0)
 		{
 			brect = boundingRect(contours.at(max_idx));
-			rectangle(white_area, brect, Scalar(255));
+			rectangle(images[i], brect, Scalar(255));
 			cout << "Diameter: " << brect.height << " X: " << (747 - brect.x) << endl;
 			Golfball golfball;
 			golfball.diameter = brect.height;
 			golfball.distance = images[i].size().width - brect.x;
-			golfball.horizontal_position = brect.y + brect.height/2.0;
-			golfball.height = brect.height - 63;
+			golfball.horizontal_position = images[i].size().height - (brect.y + brect.height/2.0);
+			golfball.height = (brect.height - 63)*pixels_per_inch;
 			golfballs.push_back(golfball);
 		}
 
 	  
 		float alpha = 0.75;
 		addWeighted(images[i], alpha, white_area, 1.0-alpha, 0.0, white_area);
-		imshow( "Source", white_area);
+		//imshow( "Source", white_area);
 
-		waitKey(0);
+		//waitKey(0);
 	}
 }
